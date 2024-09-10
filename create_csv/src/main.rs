@@ -14,7 +14,7 @@ use std::io::Error;
 fn main() {
 
     // Read .env file
-    let path_env = Path::new("../.env");
+    let path_env = Path::new("./.env");
     from_path(path_env).expect("Failed to open .env file");
     let count_data = env::var("COUNT_DATA").expect("Fail read COUNT_DATA in .env");
     let count_file = env::var("COUNT_FILE").expect("Fail read COUNT_FILE in .env");
@@ -24,6 +24,8 @@ fn main() {
     let count_file = count_file.parse::<u32>().expect("COUNT_FILE is mast be u32");
 
     let file_volume_path = String::from("var/lib/DB_test/");
+
+    fs::create_dir(file_volume_path).expect("Failed to create root directory");
 
     match delete_extra_csv(&file_volume_path) {
         Ok(()) => println!("All used .csv files are deleted"),
