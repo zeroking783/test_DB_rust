@@ -1,9 +1,5 @@
-use std::fs::File;
-use dotenv::dotenv;
 use postgres::{NoTls, Client, Error};
-use std::path::Path;
-use std::ptr::read;
-use csv::{Reader, ReaderBuilder};
+use csv::{ReaderBuilder};
 
 fn main() {
     let adress = dotenv::var("ADRESS").expect("Enter the environment variable ADRESS");
@@ -21,7 +17,7 @@ fn main() {
             panic!("Failed to connect to database"); // Или другое действие в случае ошибки
         });
 
-    let file_name = String::from(format!("../{}.csv", replica_number));
+    let file_name = String::from(format!("/var/lib/DB_test/{}.csv", replica_number));
 
     let replica_number = replica_number.parse::<i32>().expect("Failed to cast replica_number to correct type");
 
