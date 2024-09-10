@@ -1,0 +1,19 @@
+
+
+FROM rust:1.80.1
+
+WORKDIR /usr/test_docker
+
+COPY ./Cargo.toml ./Cargo.lock ./create_csv/  
+  
+COPY ./.env ./create_csv/
+
+COPY ./src ./create_csv/src  
+
+WORKDIR /usr/test_docker/create_csv/
+
+RUN cargo build --release  
+
+RUN ls -l target/release/  
+
+CMD ["./target/release/create_csv"]
