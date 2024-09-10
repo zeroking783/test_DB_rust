@@ -6,8 +6,6 @@ WORKDIR /usr/create_csv
 
 COPY ./Cargo.toml ./Cargo.lock .
   
-COPY ./.env .
-
 COPY ./src ./src
 
 RUN cargo build --release  

@@ -4,5 +4,7 @@ services:
   rust_app:
     image: bakvivas/create_csv:test
     container_name: create_csv
-    build:
-      context: 
+    volumes: 
+      - /var/lib/DB_test:/var/lib/DB_test
+    env_file:
+      - .env
