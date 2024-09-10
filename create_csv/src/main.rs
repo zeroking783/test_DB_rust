@@ -1,20 +1,17 @@
-use std::collections::HashSet;
-use std::{env, fs};
-use std::fs::File;
-use dotenv::from_path;
 use csv::Writer;
-use std::path::Path;
-use std::io::Error;
+use dotenv::from_path;
 use rand::{Rng, thread_rng};
 use rand::distributions::Alphanumeric;
+use std::collections::HashSet;
+use std::{env, fs};
+use std::fmt::format;
+use std::fs::File;
+use std::path::Path;
+use std::io::Error;
+
 
 
 fn main() {
-
-    match delete_extra_csv() {
-        Ok(()) => println!("All used .csv files are deleted"),
-        Err(e) => eprintln!("Error: {e}"),
-    }
 
     // Read .env file
     let path_env = Path::new("../.env");
@@ -26,13 +23,20 @@ fn main() {
     let count_data = count_data.parse::<u32>().expect("COUNT_DATA is mast be u32");
     let count_file = count_file.parse::<u32>().expect("COUNT_FILE is mast be u32");
 
+    let file_volume_path = String::from("var/lib/DB_test/");
+
+    match delete_extra_csv(&file_volume_path) {
+        Ok(()) => println!("All used .csv files are deleted"),
+        Err(e) => eprintln!("Error: {e}"),
+    }
+
     match check_divisibility_data_file(&count_data, &count_file) {
         Ok(()) => println!("COUNT_DATA and COUNT_FILE are successfully"),
         Err(e) => eprintln!("Error: {}", e),
     }
 
     // Processing create general.csv file
-    match create_file_csv(&main_file_name, count_file) {
+    match create_file_csv(&file_volume_path, count_file, &main_file_name) {
         Ok(()) => println!("File {} created successfully", main_file_name),
         Err(e) => eprintln!("Error: {}", e),
     }
@@ -61,14 +65,14 @@ fn main() {
     }
 
     // Write general .csv
-    write_to_csv(format!("../{}", main_file_name), words, nums, count_file).unwrap();
+    write_to_csv(&file_volume_path, &main_file_name, words, nums, count_file).unwrap();
 }
 
 // Create all .csv files
-fn create_file_csv(filename: &String, count_file: u32) -> Result<(), Error> {
-    let mut file = File::create(format!("../{}", filename))?;
+fn create_file_csv(file_volume_path: &String, count_file: u32, main_file_name: &String) -> Result<(), Error> {
+    let mut file = File::create(format!("{}/{}", file_volume_path, main_file_name))?;
     for i in 1..=count_file {
-        let mut file = File::create(format!("../{}.csv", i.to_string()))?;
+        let mut file = File::create(format!("{}/{}.csv", file_volume_path, i.to_string()))?;
     }
     Ok(())
 }
@@ -82,8 +86,8 @@ fn check_divisibility_data_file(count_data: &u32, count_file: &u32) -> Result<()
     }
 }
 
-fn delete_extra_csv() -> Result<(), std::io::Error>{
-    for entry in fs::read_dir("../")? {
+fn delete_extra_csv(file_volume_path: &String) -> Result<(), std::io::Error>{
+    for entry in fs::read_dir(format!("{}/", file_volume_path))? {
         let entry = entry?;
         let path = entry.path();
 
@@ -94,15 +98,15 @@ fn delete_extra_csv() -> Result<(), std::io::Error>{
     Ok(())
 }
 
-fn write_to_csv(filename: String, all_word: Vec<String>, all_num: Vec<i32>, count_file: u32) -> Result<(), csv::Error> {
-    let mut wtr_general = Writer::from_path(&filename)?;
+fn write_to_csv(file_volume_path: &String, main_file_name: &String, all_word: Vec<String>, all_num: Vec<i32>, count_file: u32) -> Result<(), csv::Error> {
+    let mut wtr_general = Writer::from_path(format!("{}/{}", &file_volume_path, &main_file_name))?;
 
     let total_files = count_file as usize;
     let total_items = all_word.len();
     let items_per_file = (total_items + total_files - 1) / total_files;
 
     let mut file_num: usize = 1;
-    let mut wtr_peace = Writer::from_path(format!("../{}.csv", file_num))?;
+    let mut wtr_peace = Writer::from_path(format!("{}/{}.csv", file_volume_path, file_num))?;
 
     for i in 0..total_items {
         if i / items_per_file + 1 == file_num {
@@ -110,7 +114,7 @@ fn write_to_csv(filename: String, all_word: Vec<String>, all_num: Vec<i32>, coun
         } else {
             wtr_peace.flush()?;
             file_num += 1;
-            wtr_peace = Writer::from_path(format!("../{}.csv", file_num))?;
+            wtr_peace = Writer::from_path(format!("{}/{}.csv", file_volume_path, file_num))?;
             wtr_peace.write_record(&[&all_word[i], &all_num[i].to_string()])?;
         }
         if i == total_items - 1 {
