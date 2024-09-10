@@ -17,7 +17,7 @@ fn main() {
     }
 
     // Read .env file
-    let path_env = Path::new("../.env");
+    let path_env = Path::new("./.env");
     from_path(path_env).expect("Failed to open .env file");
     let count_data = env::var("COUNT_DATA").expect("Fail read COUNT_DATA in .env");
     let count_file = env::var("COUNT_FILE").expect("Fail read COUNT_FILE in .env");

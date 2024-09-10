@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  rust_app:
+    image: bakvivas/create_csv:test
+    container_name: create_csv
+    build:
+      context: 
