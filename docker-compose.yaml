@@ -14,11 +14,10 @@ services:
     container_name: send_data
     depends_on: 
       - create_csv
-    restart:
-      - "on-failure"
     environment:
       - INSTANCE_ID=$HOSTNAME
     volumes:
       - /var/lib/DB_test:/var/lib/DB_test
+    entrypoint: ["/bin/sh", "-c", "/var/lib/DB_test/wait_create_csv.sh"]
     env_file:
       - .env.database
