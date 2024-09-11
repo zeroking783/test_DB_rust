@@ -7,9 +7,18 @@ fn main() {
     let pass_db = dotenv::var("PASS_DB").expect("Enter the environment variable PASS_DB");
     let db_name = dotenv::var("DB_NAME").expect("Enter the environment variable DB_NAME");
     let db_user = dotenv::var("DB_USER").expect("Enter the environment variable DB_USER");
-    let replica_number = dotenv::var("HOSTNAME").expect("REPLICA_NUMBER is not found");
+    let replica_name = dotenv::var("HOSTNAME").expect("REPLICA_NUMBER is not found");
     let tb_name = dotenv::var("TB_NAME").expect("TB_NAME is not found");
     let client: Client;
+
+    let mut replica_number = 0;
+
+    let replica_name_split = input.split('_').collect;
+    if let Some(last) = replica_name_split.last() {
+        replica_number = last.parse::<i32>.expect("Failed to read replica_name and conversion to i32");
+    } else {
+	println!("replica_name not found");
+}
 
     let mut client = connect_to_database(&adress, &port, &pass_db, &db_name, &db_user)
         .unwrap_or_else(|e| {
@@ -17,7 +26,7 @@ fn main() {
             panic!("Failed to connect to database"); // Или другое действие в случае ошибки
         });
 
-    let file_name = String::from(format!("/var/lib/DB_test/{}.csv", replica_number));
+    let file_name = String::from(format!("/var/lib/DB_test/{}.csv", replica_number.to_string()));
 
     let replica_number = replica_number.parse::<i32>().expect("Failed to cast replica_number to correct type");
 

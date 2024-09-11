@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   create_csv:
     image: bakvivas/create_csv:test
@@ -11,7 +9,6 @@ services:
 
   send_data:
     image: bakvivas/send_data:test
-    container_name: send_data
     depends_on: 
       - create_csv
     environment:
