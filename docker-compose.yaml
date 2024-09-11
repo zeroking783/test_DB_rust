@@ -8,9 +8,14 @@ services:
       - /var/lib/DB_test:/var/lib/DB_test
     env_file:
       - .env
+
   send_data:
     image: bakvivas/send_data:test
     container_name: send_data
+    depends_on: 
+      - create_csv
+    restart:
+      - "on-failure"
     environment:
       - INSTANCE_ID=$HOSTNAME
     volumes:
