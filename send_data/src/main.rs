@@ -13,9 +13,9 @@ fn main() {
 
     let mut replica_number = 0;
 
-    let replica_name_split = input.split('_').collect;
+    let replica_name_split: Vec<&str> = replica_name.split("_").collect();
     if let Some(last) = replica_name_split.last() {
-        replica_number = last.parse::<i32>.expect("Failed to read replica_name and conversion to i32");
+        replica_number = last.parse::<i32>().expect("Failed to read replica_name and conversion to i32");
     } else {
 	println!("replica_name not found");
 }
@@ -27,8 +27,6 @@ fn main() {
         });
 
     let file_name = String::from(format!("/var/lib/DB_test/{}.csv", replica_number.to_string()));
-
-    let replica_number = replica_number.parse::<i32>().expect("Failed to cast replica_number to correct type");
 
     let mut rdr = ReaderBuilder::new()
         .has_headers(false)
