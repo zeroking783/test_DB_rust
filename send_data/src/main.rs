@@ -7,7 +7,7 @@ fn main() {
     let pass_db = dotenv::var("PASS_DB").expect("Enter the environment variable PASS_DB");
     let db_name = dotenv::var("DB_NAME").expect("Enter the environment variable DB_NAME");
     let db_user = dotenv::var("DB_USER").expect("Enter the environment variable DB_USER");
-    let replica_number = dotenv::var("REPLICA_NUMBER").expect("REPLICA_NUMBER is not found");
+    let replica_number = dotenv::var("HOSTNAME").expect("REPLICA_NUMBER is not found");
     let tb_name = dotenv::var("TB_NAME").expect("TB_NAME is not found");
     let client: Client;
 

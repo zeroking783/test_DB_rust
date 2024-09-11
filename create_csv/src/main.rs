@@ -69,6 +69,8 @@ fn main() {
 
     // Write general .csv
     write_to_csv(&file_volume_path, &main_file_name, words, nums, count_file).unwrap();
+
+    File::create(format!("{}complete_flag", file_volume_path)).expect("Failed to create captire flag");
 }
 
 // Create all .csv files
